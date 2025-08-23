@@ -4,10 +4,11 @@ import Link from 'next/link'
 import { Feedback } from '@/components/Feedback'
 import { Heading } from '@/components/Heading'
 import { Prose } from '@/components/Prose'
+import React from 'react'
 
 export const a = Link
 export { Button } from '@/components/Button'
-export { CodeGroup, Code as code, Pre as pre } from '@/components/Code'
+export { Code as code, CodeGroup, Pre as pre } from '@/components/Code'
 
 export function wrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -125,3 +126,6 @@ export function Property({
     </li>
   )
 }
+
+import PG from './PayloadGenerator';
+export const PayloadGenerator = PG;
