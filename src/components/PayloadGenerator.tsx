@@ -35,7 +35,7 @@ export default function PayloadGenerator() {
       <div>
         <h3>Payload Generator</h3>
         <p>
-          If you don't want to mess around with JavaScript consoles, you can use
+          If you don&apos;t want to mess around with JavaScript consoles, you can use
           this UI tool to generate your payload.
         </p>
         <div className="not-prose grid grid-cols-3">
