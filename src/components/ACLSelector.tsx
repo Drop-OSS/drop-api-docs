@@ -129,6 +129,10 @@ export default function ACLSelector({
     (e) => !selectedACLS.includes(e),
   )
 
+  const filteredACLs = acls.filter((e) =>
+    e.toLowerCase().includes(query.toLowerCase()),
+  )
+
   return (
     <Combobox
       as="div"
@@ -157,15 +161,7 @@ export default function ACLSelector({
           transition
           className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10"
         >
-          {query.length > 0 && (
-            <ComboboxOption
-              value={{ id: null, name: query }}
-              className="cursor-default px-3 py-2 text-gray-900 select-none data-focus:bg-blue-600 data-focus:text-white data-focus:outline-hidden dark:text-gray-300 dark:data-focus:bg-blue-500"
-            >
-              {query}
-            </ComboboxOption>
-          )}
-          {acls.map((acl) => (
+          {filteredACLs.map((acl) => (
             <ComboboxOption
               key={acl}
               value={acl}
@@ -174,6 +170,14 @@ export default function ACLSelector({
               <span className="block truncate">{acl}</span>
             </ComboboxOption>
           ))}
+          {query.length > 0 && (
+            <ComboboxOption
+              value={query}
+              className="cursor-default px-3 py-2 text-gray-900 select-none data-focus:bg-blue-600 data-focus:text-white data-focus:outline-hidden dark:text-gray-300 dark:data-focus:bg-blue-500"
+            >
+              Override add "{query}"
+            </ComboboxOption>
+          )}
         </ComboboxOptions>
       </div>
     </Combobox>

@@ -35,8 +35,8 @@ export default function PayloadGenerator() {
       <div>
         <h3>Payload Generator</h3>
         <p>
-          If you don&apos;t want to mess around with JavaScript consoles, you can use
-          this UI tool to generate your payload.
+          If you don&apos;t want to mess around with JavaScript consoles, you
+          can use this UI tool to generate your payload.
         </p>
         <div className="not-prose grid grid-cols-3">
           <div className="col-span-2 space-y-2 border-r border-zinc-300 pr-4 dark:border-zinc-700">
@@ -102,9 +102,8 @@ export default function PayloadGenerator() {
               </span>
             </div>
 
-            <div className='flex flex-row items-center gap-2 flex-wrap'>
-                {acls.map((acl) => (
-              <>
+            <div className="flex flex-row flex-wrap items-center gap-2">
+              {acls.map((acl) => (
                 <span
                   key={acl}
                   className="inline-flex items-center gap-x-0.5 rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 inset-ring inset-ring-blue-700/10 dark:bg-blue-400/10 dark:text-blue-400 dark:inset-ring-blue-400/30"
@@ -125,8 +124,7 @@ export default function PayloadGenerator() {
                     <span className="absolute -inset-1" />
                   </button>
                 </span>
-              </>
-            ))}
+              ))}
             </div>
 
             <ACLSelector mode={mode} addACL={addACL} selectedACLS={acls} />
