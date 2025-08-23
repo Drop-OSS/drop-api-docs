@@ -175,7 +175,7 @@ export default function ACLSelector({
               value={query}
               className="cursor-default px-3 py-2 text-gray-900 select-none data-focus:bg-blue-600 data-focus:text-white data-focus:outline-hidden dark:text-gray-300 dark:data-focus:bg-blue-500"
             >
-              Override add "{query}"
+              Override add &quot;{query}&quot;
             </ComboboxOption>
           )}
         </ComboboxOptions>
