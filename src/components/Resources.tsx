@@ -14,6 +14,7 @@ import { UserIcon } from '@/components/icons/UserIcon'
 import { UsersIcon } from '@/components/icons/UsersIcon'
 import { DocumentIcon } from '@/components/icons/DocumentIcon'
 import { ShapesIcon } from '@/components/icons/ShapesIcon'
+import { CogIcon } from './icons/CogIcon'
 
 interface Resource {
   href: string
@@ -70,11 +71,11 @@ const resources: Array<Resource> = [
     },
   },
   {
-    href: '/groups',
-    name: 'Groups',
+    href: '/web/import',
+    name: 'Import',
     description:
-      'Learn about the group model and how to create, retrieve, update, delete, and list groups.',
-    icon: UsersIcon,
+      'Learn about to use Drop\'s import functionality.',
+    icon: CogIcon,
     pattern: {
       y: 22,
       squares: [[0, 1]],
