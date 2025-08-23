@@ -118,16 +118,14 @@ function SmallPrint() {
   return (
     <div className="flex flex-col items-center justify-between gap-5 border-t border-zinc-900/5 pt-8 sm:flex-row dark:border-white/5">
       <p className="text-xs text-zinc-600 dark:text-zinc-400">
-        &copy; Copyright {new Date().getFullYear()}. All rights reserved.
+        &copy; Copyright {new Date().getFullYear()}. Licensed under AGPLv3 &
+        Tailwind Plus License.
       </p>
       <div className="flex gap-4">
-        <SocialLink href="#" icon={XIcon}>
-          Follow us on X
+        <SocialLink href="https://github.com/Drop-OSS" icon={GitHubIcon}>
+          Check out our GitHub
         </SocialLink>
-        <SocialLink href="#" icon={GitHubIcon}>
-          Follow us on GitHub
-        </SocialLink>
-        <SocialLink href="#" icon={DiscordIcon}>
+        <SocialLink href="https://discord.gg/ACq4qZp4a9" icon={DiscordIcon}>
           Join our Discord server
         </SocialLink>
       </div>
