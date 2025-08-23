@@ -497,3 +497,130 @@ Simple authentication is the default and fallback in Drop. It relies on a simple
 
   </Col>
 </Row>
+
+---
+
+## Fetch an invitation {{ tag: 'GET', label: '/api/v1/auth/signup/simple' }}
+
+<Row>
+  <Col>
+
+    This endpoint is used by un-authenticated clients to fetch details about an invitation. The invitation ID acts as a secret to access invitations.
+
+    ### Query parameters
+    <Properties>
+      <Property name="id" type="string">
+        ID of invitation, fetched from the register URL.
+      </Property>
+    </Properties>
+
+    ### Response parameters
+
+    The response parameters are the same as described in [Fetch invitation](#fetch-invitations).
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/api/v1/auth/signup/simple">
+
+    ```bash {{ title: 'cURL' }}
+    curl -G http://localhost:3000/api/v1/auth/signup/simple?id={id}
+    ```
+
+    ```js
+    const response = await fetch("http://localhost:3000/api/v1/auth/signup/simple?id={id}", {});
+
+    const invitation = await response.json();
+
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    [
+        {
+            "id": "418d2c3f-8029-409e-b47c-0c3b158be3e1",
+            "isAdmin": true,
+            "username": "testusername",
+            "email": "example@example.com",
+            "expires": "2025-09-23T06:37:19.047Z"
+        }
+    ]
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Create user {{ tag: 'POST', label: '/api/v1/auth/signup/simple' }}
+
+<Row>
+  <Col>
+
+    This endpoint consumes an invitation to create a user with the Simple authentication mechanism.
+
+    ### Request parameters
+    <Properties>
+      <Property name="invitation" type="string">
+        ID of invitation, usually fetched from the register URL.
+      </Property>
+      <Property name="password" type="string">
+        Password of the user. Must be >= 14 characters.
+      </Property>
+      <Property name="username" type="string">
+        Username of the user. Must be set regardless if invitation will override it. Will be overriden if the invitation has it.
+      </Property>
+      <Property name="email" type="string">
+        Email of the user, uses basic email validation (x\@y\.z). Must be set regardless if invitation will override it. Will be overriden if the invitation has it.
+      </Property>
+      <Property name="displayName" type="string">
+        Optional, display name of user. No restrictions.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/api/v1/auth/signup/simple">
+
+    ```bash {{ title: 'cURL' }}
+    curl -X POST http://localhost:3000/api/v1/auth/signup/simple?id={id} \
+      -H "Authorization: Bearer {token}" \
+      -H "Content-Type: application/json" \
+      -d "{ ... }"
+    ```
+
+    ```js
+    const response = await fetch("http://localhost:3000/api/v1/auth/signup/simple", {
+        method: "POST",
+        body: {
+            invitation: "...",
+            username: "myUsername",
+            email: "me@example.com",
+            password: "passwordpassword123", // This is not recommended as a password
+            displayName: "My Display Name"
+        }
+    });
+
+    const user = await response.json();
+
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "id": "d2b487be-f796-4259-83d9-6ec27ad2947e",
+        "username": "exampleusername",
+        "email": "example@example.com",
+        "displayName": "Example Username",
+        "profilePictureObjectId": "1d5f7aeb-df75-439c-a2e9-b875af4724d2",
+        "admin": true,
+        "enabled": true
+    }
+
+    ```
+
+  </Col>
+</Row>
