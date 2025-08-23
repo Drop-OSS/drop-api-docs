@@ -1,3 +1,231 @@
+export const metadata = {
+  title: 'Object',
+  description:
+    "On this page, we'll dive into objects, and how to access them through the Web API.",
+}
+
 # Objects
 
-Under construction.
+Objects are Drop-generated binary blobs with attached metadata. They are used to store images, downloads, and similar files. {{ className: 'lead' }}
+
+## Authentication
+
+Objects don't inherently require authentication, but generally do. Object ACLs are one of three values:
+
+- `anonymous`: Anyone can access it. The object doesn't require authentication.
+- `internal`: Anyone with an account can access it. As long as you have a valid session or User token, you can access it.
+- `[userId]`: Only a specific user can access it, based on the user ID.
+
+As long with one of these values, one of the following CRUD operations can be append:
+
+- `read`: Read access to the object.
+- `write`: Update/overwrite access to the object.
+- `delete`: Delete access to the object.
+
+Putting these together, we get ACLs like:
+
+- `anonymous:read`
+- `[userId]:write`
+- `internal:write`
+
+**However, these kinds of operations are rarely handled by the object system, for various reasons.** Generally only `read` permissions are granted at an object-level, and then endpoints update object IDs internally.
+
+## Object metadata
+
+Alongside a raw binary blob, objects store various bits of metadata, which are used internally for various purposes. As an API consumer, you don't have access to most of this metadata directly, but it is exposed in the behaviour of various routes.
+
+### Properties
+
+<Properties>
+  <Property name="mime" type="string">
+    MIME type of the data. This type is returned in the `Content-Type` header
+    for fetch requests of objects. Read about [MIME types on the
+    MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types).
+  </Property>
+  <Property name="permissions" type="string[]">
+    List of ACLs as described above. They define what operations are permitted
+    and not permitted on objects.
+  </Property>
+  <Property name="userMetadata" type="string">
+    Additional metadata. Despite the name, this metadata is not provided by,
+    you, the user, but instead by consumers of the internal object API, who is
+    'user' instead. Essentially, this metadata is per-object and per-usecase
+    specific. It is not exposed.
+  </Property>
+</Properties>
+
+---
+
+## Check object {{ tag: 'HEAD', label: '/api/v1/object/:id', apilevel: "user", acl: "object:read" }}
+
+<Row>
+  <Col>
+
+    This endpoint is used by browsers to check `ETag` values for client-side caching. It only sets ETag headers, not `Content-Type`.
+
+    The above ACL isn't *required* to access internal resources, only if you want to access user-restricted objects.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="HEAD" label="/api/v1/object/:id">
+
+    ```bash {{ title: 'cURL' }}
+    curl -I http://localhost:3000/api/v1/object/{id} \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```js
+    const response = await fetch("http://localhost:3000/api/v1/object/{id}", {
+        headers: {
+            Authorization: "Bearer {token}"
+        },
+        method: "HEAD"
+    });
+
+    ```
+
+    </CodeGroup>
+
+    ``` {{ title: 'Response' }}
+    No response returned.
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Fetch object {{ tag: 'GET', label: '/api/v1/object/:id', apilevel: "user", acl: "object:read" }}
+
+<Row>
+  <Col>
+
+    This endpoint fetches a binary stream of the object's content. It sets both ETag headers and `Content-Type` for proper rendering within browsers.
+
+    The above ACL isn't *required* to access internal resources, only if you want to access user-restricted objects.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/api/v1/object/:id">
+
+    ```bash {{ title: 'cURL' }}
+    curl -G http://localhost:3000/api/v1/object/{id} \
+      -H "Authorization: Bearer {token}" \
+      --output myfile.bin
+    ```
+
+    ```js
+    const response = await fetch("http://localhost:3000/api/v1/object/{id}", {
+        headers: {
+            Authorization: "Bearer {token}"
+        },
+    });
+
+    const object = await response.blob();
+
+    ```
+
+    </CodeGroup>
+
+    ``` {{ title: 'Response' }}
+    < ... binary stream of object contents ...>
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Update object {{ tag: 'POST', label: '/api/v1/object/:id', apilevel: "user", acl: "object:update" }}
+
+<Row>
+  <Col>
+
+    This endpoint overwrites an object in-place (the ID doesn't change). It's rarely used, as endpoint generally handle uploads themselves.
+
+    The above ACL isn't *required* to access internal resources, only if you want to access user-restricted objects.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/api/v1/object/:id">
+
+    ```bash {{ title: 'cURL' }}
+    curl -X POST http://localhost:3000/api/v1/object/{id} \
+      -H "Authorization: Bearer {token}" \
+      --data-binary "@myfile.bin"
+    ```
+
+    ```js
+    const response = await fetch("http://localhost:3000/api/v1/object/{id}", {
+        headers: {
+            Authorization: "Bearer {token}"
+        },
+        method: "POST",
+        body: Buffer.from(...)
+    });
+
+
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "success": true
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Delete object {{ tag: 'DELETE', label: '/api/v1/object/:id', apilevel: "user", acl: "object:delete" }}
+
+<Row>
+  <Col>
+
+    This endpoint deletes an object by ID. Again, it is rarely used, as individual endpoints handle object deletions themselves.
+
+    The above ACL isn't *required* to access internal resources, only if you want to access user-restricted objects.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="DELETE" label="/api/v1/object/:id">
+
+    ```bash {{ title: 'cURL' }}
+    curl -X DELETE http://localhost:3000/api/v1/object/{id} \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```js
+    const response = await fetch("http://localhost:3000/api/v1/object/{id}", {
+        headers: {
+            Authorization: "Bearer {token}"
+        },
+        method: "DELETE",
+    });
+
+
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "success": true
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Object cleanup
+
+It is important to note that there is a scheduled task on Drop instances that cleans up unreferenced objects. It automatically deletes objects unreferenced in the database, but it may not function correctly. If you find that objects are disappearing on you, please [file a bug report](https://github.com/Drop-OSS/drop/issues).
