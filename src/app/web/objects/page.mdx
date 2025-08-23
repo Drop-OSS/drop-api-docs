@@ -63,7 +63,7 @@ Alongside a raw binary blob, objects store various bits of metadata, which are u
 
     This endpoint is used by browsers to check `ETag` values for client-side caching. It only sets ETag headers, not `Content-Type`.
 
-    The above ACL isn't *required* to access internal resources, only if you want to access user-restricted objects.
+    The above ACL isn't *required* to access resources, only if you want to access user-restricted or internal objects.
 
   </Col>
   <Col sticky>
@@ -103,7 +103,7 @@ Alongside a raw binary blob, objects store various bits of metadata, which are u
 
     This endpoint fetches a binary stream of the object's content. It sets both ETag headers and `Content-Type` for proper rendering within browsers.
 
-    The above ACL isn't *required* to access internal resources, only if you want to access user-restricted objects.
+    The above ACL isn't *required* to access resources, only if you want to access user-restricted or internal objects.
 
   </Col>
   <Col sticky>
@@ -145,7 +145,7 @@ Alongside a raw binary blob, objects store various bits of metadata, which are u
 
     This endpoint overwrites an object in-place (the ID doesn't change). It's rarely used, as endpoint generally handle uploads themselves.
 
-    The above ACL isn't *required* to access internal resources, only if you want to access user-restricted objects.
+    The above ACL isn't *required* to access resources, only if you want to access user-restricted or internal objects.
 
   </Col>
   <Col sticky>
@@ -190,7 +190,7 @@ Alongside a raw binary blob, objects store various bits of metadata, which are u
 
     This endpoint deletes an object by ID. Again, it is rarely used, as individual endpoints handle object deletions themselves.
 
-    The above ACL isn't *required* to access internal resources, only if you want to access user-restricted objects.
+    The above ACL isn't *required* to access resources, only if you want to access user-restricted or internal objects.
 
   </Col>
   <Col sticky>
