@@ -1,0 +1,297 @@
+export const metadata = {
+  title: 'Tasks',
+  description:
+    "On this page, we'll dive into tasks, and how to connect to them and listen for updates through the Web API.",
+}
+
+# Tasks
+
+Tasks are long-running operations that some users may want to come back to, or leave running in the background. {{ className: 'lead' }}
+
+## Authentication
+
+Connecting to the task endpoint doesn't require any special permissions. However, each task has a list of ACLs that you must have at least one of to connect to the task.
+
+For example, even though you can connect, if you don't have the `system:maintenance:read` ACL, you won't be able to access any of the session/object cleanup tasks.
+
+---
+
+## Connect {{ tag: 'WS', label: '/api/v1/task' }}
+
+Connecting and listening to task is a multi-stage process. You can listen to more than one task on the same websocket connection.
+
+### Setting up
+
+This is a GET endpoint that upgrades to a Websocket connection upon connection.
+
+When you connect, you'll get a single message:
+
+- `unauthenticated`: There was an error fetching the internal states of your websocket connection, and you won't be able to connect to any tasks.
+- `connect`: You've connect successfully to the endpoint, and you can continue.
+
+### Connecting to a task
+
+Once connected, you can send a message in the following format:
+
+```
+connect/{task id}
+```
+
+Where "task id" is the ID of the task you want to connect to. These task IDs are returned by several other endpoints, like import endpoints and task CRUD endpoints.
+
+After you send that message, you'll be connected to the task.
+
+At any point, Drop will send one of the following messages:
+
+### Error event: `error/{task id}/{error title}/{error body}`
+
+This means something has gone wrong with the task, and you should show or handle the error.
+
+If "error title" is "Unknown task", your task ID was invalid, or you do not have the necessary ACLs to access the task.
+
+This is different from an error generated from a task. This error is from Drop itself, not the task.
+
+### Disconnect event: `disconnect/{task id}`
+
+The task has ended, and you'll no longer recieve updates
+
+### Task message: `{ ... JSON object ... }`
+
+If the message isn't one of the two above ones, it'll be a stringified JSON object that represents a task message:
+
+```json
+{
+  "id": "...",
+  "name": "My Task",
+  "success": false,
+  "progress": 34,
+  "error": null,
+  "log": [
+    "... JSON object ...",
+    "... JSON object ...",
+    "... more JSON objects ...",
+    "... yet another JSON object ..."
+  ],
+  "reset": false
+};
+```
+
+### Task message properties
+
+Here's what they do:
+
+<Properties>
+  <Property name="id" type="string">
+    Task ID of this message
+  </Property>
+  <Property name="name" type="string">
+    User-friendly name of this task.
+  </Property>
+  <Property name="success" type="string">
+    If `true`, this task has completed without error.
+  </Property>
+  <Property name="error" type="object">
+    If not `null` or `undefined`, it will be an object:
+    ```json
+    {
+        "title": "My Error",
+        "description": "Something has gone terribly wrong."
+    }
+    ```
+
+    This means the task has errored out with the above error.
+
+  </Property>
+  <Property name="progress" type="number">
+    A number between 0-100 that represents the progress. Not guaranteed to be between 0-100, but we spit out warnings if it is.
+  </Property>
+  <Property name="log" type="string[]">
+    An array of log messages. If `reset` is not set (see below), it is a **partial** log message, which means you should append these messages to a local cache of them for display.
+
+    Each log message is a JSON stringified object:
+    ```json
+    {
+        "message": "my log line",
+        "level": "info",
+        "timestamp": "2025-09-23T06:37:19.047Z"
+    }
+    ```
+
+    The values are fairly self-explanatory. Do note that, on older versions of Drop, `level` is a number rather than a string, so you may need to map it to the string value:
+
+    | Number | String |
+    | ------ | ------ |
+    | 100    | silent |
+    | 60     | fatal  |
+    | 50     | error  |
+    | 40     | warn   |
+    | 30     | info   |
+    | 20     | debug  |
+    | 10     | trace  |
+    | 0      | off    |
+
+    This also serves as a list of all possible `level` values*.*
+
+  </Property>
+  <Property name="reset" type="boolean">
+    This message is a reset message, meaning it contains a full log history, rather than a partial one. You should overwrite your local log history, rather than appending to it.
+  </Property>
+</Properties>
+
+---
+
+## Fetch all tasks {{ tag: 'GET', label: '/api/v1/admin/task', apilevel: "system", acl: "task:read" }}
+
+<Row>
+  <Col>
+
+    Fetches all tasks running, recently run, and scheduled for this instance.
+
+    <Note>
+    The scheduled tasks refer to *task groups*, not individual tasks. These are string IDs for a type of task, like `cleanup:invitations`, rather than a *specific* task, like `cleanup:invitations:{timestamp}`.
+    </Note>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/api/v1/admin/task">
+
+    ```bash {{ title: 'cURL' }}
+    curl -G http://localhost:3000/api/v1/admin/task \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```js
+    const response = await fetch("http://localhost:3000/api/v1/admin/task", {
+        headers: {
+            Authorization: "Bearer {token}"
+        },
+    });
+
+    const { runningTasks, historicalTasks, dailyTasks, weeklyTasks } = await response.blob();
+
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "runningTasks": [],
+        "historicalTasks": [
+            {
+                "id": "cleanup:invitations:2025-08-23T08:27:15.156Z",
+                "taskGroup": "cleanup:invitations",
+                "name": "Cleanup Invitations",
+                "started": "2025-08-23T08:27:15.156Z",
+                "ended": "2025-08-23T08:27:15.258Z",
+                "success": true,
+                "error": null,
+                "progress": 100,
+                "log": [
+                    "{\"level\":\"info\",\"time\":\"2025-08-23T08:27:15.257Z\",\"msg\":\"Cleaning invitations\"}",
+                    "{\"level\":\"info\",\"time\":\"2025-08-23T08:27:15.258Z\",\"msg\":\"Done\"}"
+                ],
+                "acls": [
+                    "system:maintenance:read"
+                ]
+            },
+            {
+                "id": "cleanup:sessions:2025-08-23T01:02:47.015Z",
+                "taskGroup": "cleanup:sessions",
+                "name": "Cleanup Sessions",
+                "started": "2025-08-23T01:02:47.016Z",
+                "ended": "2025-08-23T01:02:47.132Z",
+                "success": true,
+                "error": null,
+                "progress": 100,
+                "log": [
+                    "{\"level\":\"info\",\"time\":\"2025-08-23T01:02:47.116Z\",\"msg\":\"Cleaning up sessions\"}",
+                    "{\"level\":\"info\",\"time\":\"2025-08-23T01:02:47.132Z\",\"msg\":\"Done\"}"
+                ],
+                "acls": [
+                    "system:maintenance:read"
+                ]
+            },
+        ],
+        "dailyTasks": [
+            "cleanup:invitations",
+            "cleanup:sessions",
+            "check:update"
+        ],
+        "weeklyTasks": [
+            "cleanup:objects"
+        ]
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Execute scheduled task {{ tag: 'POST', label: '/api/v1/admin/task', apilevel: "system", acl: "task:start" }}
+
+<Row>
+  <Col>
+
+    This endpoint invokes a scheduled task by the task group name (see above, `dailyTasks` & `weeklyTasks`), and returns the task ID.
+
+    Despite not needing the task's ACL to start it, you will need the task's ACL to read it.
+
+    ### Request body
+    <Properties>
+        <Property name="taskGroup" type="string">
+            Name of the task group to start.
+        </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/api/v1/admin/task">
+
+    ```bash {{ title: 'cURL' }}
+    curl -X POST http://localhost:3000/api/v1/admin/task \
+      -H "Authorization: Bearer {token}" \
+      -H "Content-Type: application/json" \
+      -d "{ ... }"
+    ```
+
+    ```js
+    const response = await fetch("http://localhost:3000/api/v1/admin/task", {
+        headers: {
+            Authorization: "Bearer {token}"
+        },
+        method: "POST",
+        body: {
+            taskGroup: "..."
+        }
+    });
+
+
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "id": "..."
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Scheduled tasks
+
+This is an exhaustive list of all scheduled tasks, their descriptions, and their tasks groups on Drop instances. It may be out-of-date for new versions. Please file a [report](https://github.com/Drop-OSS/drop-api-docs/issues) if you believe it is out-of-date.
+
+| Task Group            | Task Name           | Description                                                                                                                             |
+| --------------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `debug`               | Debug Task          | May not be implemented; usually removed for release and only added when needing to debug tasks.                                         |
+| `cleanup:invitations` | Cleanup Invitations | Deletes expired invitations from database to save space. Invitations check themselves regardless, this just cleans out old invitations. |
+| `cleanup:objects`     | Cleanup Objects     | Deletes unreferenced objects from the object backend to save space.                                                                     |
+| `cleanup:sessions`    | Cleanup Sessions    | Cleans up expired sessions from the session handler.                                                                                    |
+| `check:update`        | Check for Update    | Checks if there is an update for Drop available, and if so, send a notification to admins.                                              |

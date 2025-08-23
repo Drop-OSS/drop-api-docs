@@ -10,10 +10,10 @@ import Link from 'next/link'
 
 import { GridPattern } from '@/components/GridPattern'
 import { Heading } from '@/components/Heading'
-import { EnvelopeIcon } from '@/components/icons/EnvelopeIcon'
 import { UserIcon } from '@/components/icons/UserIcon'
 import { UsersIcon } from '@/components/icons/UsersIcon'
 import { DocumentIcon } from '@/components/icons/DocumentIcon'
+import { ShapesIcon } from '@/components/icons/ShapesIcon'
 
 interface Resource {
   href: string
@@ -56,11 +56,11 @@ const resources: Array<Resource> = [
     },
   },
   {
-    href: '/messages',
-    name: 'Messages',
+    href: '/web/tasks',
+    name: 'Tasks',
     description:
-      'Learn about the message model and how to create, retrieve, update, delete, and list messages.',
-    icon: EnvelopeIcon,
+      'Learn about Drop\' tasks system, and how to connect to and listen to them.',
+    icon: ShapesIcon,
     pattern: {
       y: 32,
       squares: [
@@ -113,7 +113,7 @@ function ResourcePattern({
         />
       </div>
       <motion.div
-        className="absolute inset-0 rounded-2xl bg-linear-to-r from-blue-600/10 to-blue-400/10 opacity-0 transition duration-300 group-hover:opacity-100 dark:from-[#202D2E] dark:to-[#303428]"
+        className="absolute inset-0 rounded-2xl bg-linear-to-r from-blue-600/10 to-blue-400/10 opacity-0 transition duration-300 group-hover:opacity-100 dark:from-blue-400/20 dark:to-blue-600/20"
         style={style}
       />
       <motion.div

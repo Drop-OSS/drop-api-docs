@@ -67,7 +67,6 @@ function NavLink({
         ? 'text-yellow-600/90 dark:text-yellow-400/70'
         : 'text-zinc-400 dark:text-zinc-500'
 
-
   return (
     <CloseButton
       as={Link}
@@ -270,6 +269,7 @@ export const navigation: Array<NavGroup> = [
     links: [
       { title: 'Users', href: '/web/users' },
       { title: 'Objects', href: '/web/objects' },
+      { title: 'Tasks', href: '/web/tasks' },
     ],
   },
 ]
