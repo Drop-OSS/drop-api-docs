@@ -1,0 +1,103 @@
+export const metadata = {
+  title: 'Web API',
+  description:
+    "On this page, we'll get started with the Web API and generating an API token.",
+}
+
+# Web API
+
+The Web API is used by the frontend to render and perform all its actions. Every function in the frontend is available through the Web API, except API token & client management for security reasons. {{ className: 'lead' }}
+
+## Tokens
+
+The Web API uses Bearer tokens to authenticate. They are called API tokens for this documentation. There are two kinds of API tokens:
+
+- **System**: System tokens operate on the same level as "admins" in the Drop UI. They manage most things, can create users, and configure the instance. System API tokens can only be created by admins.
+- **User**: User tokens operate **as a user**, essentially impersonating them. User tokens generally have only read access, except to user-specific resources like libraries/collections.
+
+Each token has a list of ACL (access control list) permissions. Each kind of token has different ACLs (for the different resources they can access). If system and user-level ACLs are referenced together, they are prefixed by `system:` and `user:`.
+
+ACL permissions are defined by the user when they create the API token. As a third-party developer, you can either list the necessary ACLs in your documentation or application, or Drop supports pre-filling the API token creation form by creating a special URL.
+
+### API token creation URL
+
+The 'payload' for the API token creation is a Base64 encoded JSON object that encodes the following information:
+
+```json
+{
+  "name": "My Application's Token",
+  "acls": [
+    "read",
+    "store:read",
+    "object:read",
+    "object:update",
+    "object:delete",
+    "clients:read",
+    "clients:revoke",
+    "..."
+  ]
+}
+```
+
+You can use the following script in your browser's console to generate the payload:
+
+```javascript
+btoa(JSON.stringify({ ... }))
+```
+
+With the payload, you can create a URL, depending on the kind of token you want to create:
+
+- **System**: `http[s]://[Drop instance URL]/admin/settings/tokens?payload={ payload }`
+- **User**: `http[s]://[Drop instance URL]/account/tokens?payload={ ... }`
+
+When the user visits the URL, it will automatically open the token generation modal with your values pre-filled.
+
+## Authentication
+
+To authenticate requests to the Drop API, use your token in the Authorization header, like so:
+
+```
+Authorization: Bearer {token}
+```
+
+## Checking your ACLs
+
+<Row>
+  <Col>
+
+    To verify the ACLs granted to your token, you can use the `/api/v1/token` endpoint. It returns a JSON array of all the ACLs granted to your token.
+
+    The ACLs are in global format, which means they're prefixed with `user:` or `system:`.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/api/v1/token">
+
+    ```bash {{ title: 'cURL' }}
+    curl -G http://localhost:3000/api/v1/token \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```javascript
+    const response = await fetch("http://localhost:3000/api/v1/token", {
+        headers: {
+            Authorization: "Bearer {token}"
+        }
+    });
+
+    const data = await response.json();
+    console.log(data) // [ "user:read", "user:store:read" ]
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    [
+        "user:read",
+        "user:store:read"
+    ]
+    ```
+
+  </Col>
+</Row>

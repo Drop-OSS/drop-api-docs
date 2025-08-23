@@ -1,0 +1,48 @@
+import { Guides } from '@/components/Guides'
+import { Resources } from '@/components/Resources'
+import { HeroPattern } from '@/components/HeroPattern'
+
+export const metadata = {
+  title: 'API Documentation',
+  description:
+    'Learn everything there is to know about the Protocol API and integrate Protocol into your product.',
+}
+
+export const sections = [
+  { title: 'Guides', id: 'guides' },
+  { title: 'Resources', id: 'resources' },
+]
+
+<HeroPattern />
+
+# Drop API Documentation
+
+Use the Drop API to interact with Drop-instances, on a per-instance level, to build third-party integrations and applications. Drop is built with an API-first development model, which means the API can do nearly anything users can, and more. {{ className: 'lead' }}
+
+<div className="not-prose mt-6 mb-16 flex gap-3">
+  <Button href="/quickstart" arrow="right">
+    <>Quickstart</>
+  </Button>
+</div>
+
+## Getting started {{ anchor: false }}
+
+To get started, you will need to decide on the type of application you are building. Drop has two sets of APIs:
+
+- **Web API**: interaction with most of the application, used for management and integration.
+- **Client API**: a specific subset of APIs, plus additional APIs used to do client-only actions, like download content and networking features.
+
+Then, use the associated authentication mechanism to authenticate with Drop.
+
+<div className="not-prose mt-6 mb-16 flex gap-3">
+  <Button href="/quickstart" arrow="right" variant="outline">
+    <>Generate a Web API token</>
+  </Button>
+  <Button href="/quickstart" arrow="right" variant="outline">
+    <>Authenticate as a client</>
+  </Button>
+</div>
+
+<Guides />
+
+<Resources />

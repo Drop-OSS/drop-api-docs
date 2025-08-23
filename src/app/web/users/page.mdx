@@ -1,0 +1,499 @@
+export const metadata = {
+  title: 'Users',
+  description:
+    "On this page, we'll dive into users and how to interact with them through the Web API.",
+}
+
+# Users
+
+Users, like most other web applications, are usually owned by a single person, and are used to categorize their activities and data. As Drop is intended to be a private platform, most requests need to be authenticated by a user first. {{ className: 'lead' }}
+
+## The user model
+
+The user model contains most of the profile information about a user, including their username and profile picture. User endpoints should be used to fetch, interact and manage users, and update information about them.
+
+### Properties
+
+<Properties>
+  <Property name="id" type="string">
+    UUID of the user. Used internally to refer to this user.
+  </Property>
+  <Property name="username" type="string">
+    Unique alphanumeric username (with length limitations), used for
+    character-restricted representations of users (like IGNs).
+  </Property>
+  <Property name="displayName" type="string">
+    Unconstrained preferred name of this user. Used when possible.
+  </Property>
+  <Property name="email" type="string">
+    Email of this user. Not currently used, but collected in case of future
+    functionality.
+  </Property>
+  <Property name="profilePictureObjectId" type="string">
+    The object ID of this user's profile picture. Check out the
+    [Objects](../objects) API on how to fetch the image.
+  </Property>
+  <Property name="admin" type="boolean">
+    Admin flag. If enabled, this user has access to system-level endpoints.
+  </Property>
+  <Property name="enabled" type="boolean">
+    If this user is currently enabled, and can be access.
+  </Property>
+</Properties>
+
+---
+
+## Fetch current user {{ tag: 'GET', label: '/api/v1/user', apilevel: "user", acl: "read" }}
+
+<Row>
+  <Col>
+
+    This endpoint fetches the current user. If you are authenticated, it returns the user. If you are not, it returns `null`.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/api/v1/user">
+
+    ```bash {{ title: 'cURL' }}
+    curl -G http://localhost:3000/api/v1/user \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```js
+    const response = await fetch("http://localhost:3000/api/v1/user", {
+        headers: {
+            Authorization: "Bearer {token}"
+        }
+    });
+
+    const user = await response.json();
+
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "id": "d2b487be-f796-4259-83d9-6ec27ad2947e",
+        "username": "exampleusername",
+        "email": "example@example.com",
+        "displayName": "Example Username",
+        "profilePictureObjectId": "1d5f7aeb-df75-439c-a2e9-b875af4724d2",
+        "admin": true,
+        "enabled": true
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## List all users {{ tag: 'GET', label: '/api/v1/admin/users', apilevel: "system", acl: "user:read" }}
+
+<Row>
+  <Col>
+
+    This endpoint fetches all users on this instance.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/api/v1/admin/users">
+
+    ```bash {{ title: 'cURL' }}
+    curl -G http://localhost:3000/api/v1/admin/users \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```js
+    const response = await fetch("http://localhost:3000/api/v1/admin/users", {
+        headers: {
+            Authorization: "Bearer {token}"
+        }
+    });
+
+    const users = await response.json();
+
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    [
+        {
+            "id": "d2b487be-f796-4259-83d9-6ec27ad2947e",
+            "username": "exampleusername",
+            "email": "example@example.com",
+            "displayName": "Example Username",
+            "profilePictureObjectId": "1d5f7aeb-df75-439c-a2e9-b875af4724d2",
+            "admin": true,
+            "enabled": true
+        }
+    ]
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Fetch user {{ tag: 'GET', label: '/api/v1/admin/users/:id', apilevel: "system", acl: "user:read" }}
+
+<Row>
+  <Col>
+
+    This endpoint fetches a user by ID.
+
+    ### Route parameters
+
+    <Properties>
+      <Property name="id" type="string">
+        ID of user you want to fetch.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/api/v1/admin/users/:id">
+
+    ```bash {{ title: 'cURL' }}
+    curl -G http://localhost:3000/api/v1/admin/users/{id} \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```js
+    const response = await fetch("http://localhost:3000/api/v1/admin/users/{id}", {
+        headers: {
+            Authorization: "Bearer {token}"
+        }
+    });
+
+    const user = await response.json();
+
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "id": "d2b487be-f796-4259-83d9-6ec27ad2947e",
+        "username": "exampleusername",
+        "email": "example@example.com",
+        "displayName": "Example Username",
+        "profilePictureObjectId": "1d5f7aeb-df75-439c-a2e9-b875af4724d2",
+        "admin": true,
+        "enabled": true
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Delete user {{ tag: 'DELETE', label: '/api/v1/admin/users/:id', apilevel: "system", acl: "user:delete" }}
+
+<Row>
+  <Col>
+
+    This endpoint deletes a user by ID
+
+    ### Route parameters
+
+    <Properties>
+      <Property name="id" type="string">
+        ID of user you want to delete.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="DELETE" label="/api/v1/admin/users/:id">
+
+    ```bash {{ title: 'cURL' }}
+    curl -X DELETE http://localhost:3000/api/v1/admin/users/{id} \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```js
+    const response = await fetch("http://localhost:3000/api/v1/admin/users/{id}", {
+        headers: {
+            Authorization: "Bearer {token}"
+        },
+        method: "DELETE"
+    });
+
+    ```
+
+    </CodeGroup>
+
+    ``` {{ title: 'Response' }}
+    No response returned.
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Authentication mechanisms
+
+With these endpoint above, you might be wondering, "well, how do you actually _create_ a user?". That job, in Drop, is given to authentication mechanism. Each user can multiple, but at least one, authentication "mechanism" attached to their account. These may be (non-exhaustive):
+
+- **Simple**: username & password combination
+- **OIDC**: OpenID Connect, allowing for Single Sign On (SSO),
+
+These authentication mechanisms are also responsible for _creating_ the user, since each user must have at least one mechanism active.
+
+---
+
+## Fetch authentication mechanisms {{ tag: 'GET', label: '/api/v1/admin/auth', apilevel: "system", acl: "auth:read" }}
+
+<Row>
+  <Col>
+
+    This endpoint returns all authentication mechanisms, and a configuration object for each if enabled, otherwise `undefined`. For mechanisms that require no authentication, the object is simply `true` or `false` depending on whether or not it's enabled.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/api/v1/admin/auth">
+
+    ```bash {{ title: 'cURL' }}
+    curl -G http://localhost:3000/api/v1/admin/auth \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```js
+    const response = await fetch("http://localhost:3000/api/v1/admin/auth", {
+        headers: {
+            Authorization: "Bearer {token}"
+        }
+    });
+
+    const authenticationMechanisms = await response.json();
+
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "Simple": true,
+        "OpenID": {
+            "authorizationUrl": "https://my.oidc.app/application/o/authorize/",
+            "scopes": "openid, email, profile, offline_access",
+            "adminGroup": "admin",
+            "usernameClaim": "preferred_username",
+            "externalUrl": "http://localhost:3000"
+        }
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Simple authentication
+
+Simple authentication is the default and fallback in Drop. It relies on a simple username & password pair to log in. Users are created through a concept of invites.
+
+---
+
+## Fetch invitations {{ tag: 'GET', label: '/api/v1/admin/invitation', apilevel: "system", acl: "auth:simple:invitation:read" }}
+
+<Row>
+  <Col>
+
+    This endpoint is used to fetch all invitations for an instance.
+
+    ### Response
+    <Properties>
+      <Property name="id" type="string">
+        Invitation ID, used as a secret for the invite.
+      </Property>
+      <Property name="isAdmin" type="boolean">
+        Whether or not this invite will create the user as an admin.
+      </Property>
+      <Property name="username" type="string">
+        Optional, will enforce a username on the account.
+      </Property>
+      <Property name="email" type="string">
+        Optional, will enforce an email on the account.
+      </Property>
+      <Property name="expires" type="timestamp">
+        Timestamp for when this invite will expire. If "Never" is selected in the UI, the invitation actually expires in 100 years.
+      </Property>
+      <Property name="inviteUrl" type="timestamp">
+        A link to the frontend page that will allow a user to register through a web browser. Uses the EXTERNAL_URL of the instance.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/api/v1/admin/invitation">
+
+    ```bash {{ title: 'cURL' }}
+    curl -G http://localhost:3000/api/v1/admin/invitation \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```js
+    const response = await fetch("http://localhost:3000/api/v1/admin/invitation", {
+        headers: {
+            Authorization: "Bearer {token}"
+        }
+    });
+
+    const invitations = await response.json();
+
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    [
+        {
+            "id": "418d2c3f-8029-409e-b47c-0c3b158be3e1",
+            "isAdmin": true,
+            "username": "testusername",
+            "email": "example@example.com",
+            "expires": "2025-09-23T06:37:19.047Z",
+            "inviteUrl": "http://localhost:3000/auth/register?id=418d2c3f-8029-409e-b47c-0c3b158be3e1"
+        }
+    ]
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Create invitation {{ tag: 'POST', label: '/api/v1/admin/invitation', apilevel: "system", acl: "auth:simple:invitation:new" }}
+
+<Row>
+  <Col>
+
+    This endpoint is used to create an invitation.
+
+    ### Required parameters
+    <Properties>
+      <Property name="expires" type="timestamp">
+        Timestamp for when this invite will expire, in the format of an ISO timestamp. Typically, you can convert a JavaScript Date object.
+      </Property>
+    </Properties>
+
+    ### Optional parameters
+     <Properties>
+      <Property name="username" type="string">
+        Username to enforce on the invitation.
+      </Property>
+      <Property name="email" type="string">
+        Email to enforce on the invitation.
+      </Property>
+      <Property name="isAdmin" type="boolean">
+        Whether or not to make this an admin invitation, defaults to false.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/api/v1/admin/invitation">
+
+    ```bash {{ title: 'cURL' }}
+    curl -X POST http://localhost:3000/api/v1/admin/invitation \
+      -H "Authorization: Bearer {token}" \
+      -H "Content-Type: application/json" \
+      -d "{ ... }"
+    ```
+
+    ```js
+    const response = await fetch("http://localhost:3000/api/v1/admin/invitation", {
+        headers: {
+            Authorization: "Bearer {token}"
+        },
+        body: {
+            expires: new Date(), // Will probably want longer than an expiry time of "now"
+            isAdmin: true
+        },
+        method: "POST"
+    });
+
+    const invitation = await response.json();
+
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    [
+        {
+            "id": "418d2c3f-8029-409e-b47c-0c3b158be3e1",
+            "isAdmin": true,
+            "username": "testusername",
+            "email": "example@example.com",
+            "expires": "2025-09-23T06:37:19.047Z",
+            "inviteUrl": "http://localhost:3000/auth/register?id=418d2c3f-8029-409e-b47c-0c3b158be3e1"
+        }
+    ]
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Delete an invitation {{ tag: 'DELETE', label: '/api/v1/admin/invitation', apilevel: "system", acl: "auth:simple:invitation:delete" }}
+
+<Row>
+  <Col>
+
+    This endpoint is used to delete an invitation.
+
+    ### Required parameters
+    <Properties>
+      <Property name="id" type="string">
+        ID of invitation to delete.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="DELETE" label="/api/v1/admin/invitation">
+
+    ```bash {{ title: 'cURL' }}
+    curl -X DELETE http://localhost:3000/api/v1/admin/invitation \
+      -H "Authorization: Bearer {token}" \
+      -H "Content-Type: application/json" \
+      -d "{ ... }"
+    ```
+
+    ```js
+    const response = await fetch("http://localhost:3000/api/v1/admin/invitation", {
+        headers: {
+            Authorization: "Bearer {token}"
+        },
+        body: {
+            id: "..."
+        },
+        method: "POST"
+    });
+
+    ```
+
+    </CodeGroup>
+
+    ``` {{ title: 'Response' }}
+    No response.
+    ```
+
+  </Col>
+</Row>

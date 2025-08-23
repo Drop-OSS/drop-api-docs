@@ -1,0 +1,100 @@
+export const metadata = {
+  title: 'Quickstart',
+  description:
+    'This guide will help you setup a new Drop instance, and how to use it for development purposes.',
+}
+
+# Quickstart
+
+This guide will help you setup a small Drop instance to develop against on your local development machine. {{ className: 'lead' }}
+
+<Note>
+  This setup is not intended for deployment. If you are looking to setup a Drop
+  instance for actual use, check out the [official
+  docs](https://docs.droposs.org/docs/guides/quickstart).
+</Note>
+
+## Install Docker
+
+Docker is required to start the database, and optionally run a pre-built version of Drop. You should follow the Docker guide for your system on the [official Docker documentation](https://docs.docker.com/engine/install/).
+
+## Option 1: Full Docker setup
+
+The easier and fastest option is to spin up an instance of Drop within a Docker container. While you can't develop against Drop's `nightly` version, it's fast and headache-free.
+
+This `compose.yaml` requires no additional configuration (other than the Drop setup wizard) to start up:
+
+```yaml
+services:
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: pg_isready -d drop -U drop
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=drop
+      - POSTGRES_USER=drop
+      - POSTGRES_DB=drop
+  drop:
+    image: ghcr.io/drop-oss/drop:latest
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - 3000:3000
+    volumes:
+      - ./library:/library
+      - ./data:/data
+    environment:
+      - DATABASE_URL=postgres://drop:drop@postgres:5432/drop
+      - EXTERNAL_URL=http://localhost:3000
+```
+
+## Option 2: From source (`nightly`)
+
+You can alternatively run Drop from source, and use Docker for the database.
+
+### Clone the GitHub repository
+
+First, clone the Drop repository:
+
+```bash
+git clone https://github.com/Drop-OSS/drop.git
+```
+
+### Checkout your preferred branch
+
+By default, Git selects the `develop` branch, which is what `nightly` is released from. You may want to checkout a tag (e.g. `v0.3.2`), or the `main` branch (latest stable).
+
+### Install dependencies
+
+We use the `yarn` package manager. Install dependencies with:
+
+```bash
+yarn
+```
+
+### Start the database
+
+Open another shell (or the same one, if you're okay with running the database in the background), and `cd` into the `dev-tools` directory. Then, start the database:
+
+```bash
+docker compose up [-d]
+```
+
+(`-d` if you want to run it in the background)
+
+### Start Drop
+
+Then, move back to the root of the repository, and then start Drop:
+
+```bash
+yarn dev
+```
