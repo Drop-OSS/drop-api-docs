@@ -180,7 +180,7 @@ Game metadata is provided by a series of backend 'metadata providers'. Drop unif
 <Row>
   <Col>
 
-    This endpoint searches all metadata providers for a query.
+    This endpoint imports a game, optionally with metadata.
 
 
     ### Request parameters
@@ -338,10 +338,10 @@ Versions, in Drop, require a lot of metadata to be imported correctly, due to th
 
     <Properties>
       <Property name="id" type="string">
-        The game ID of the unimported version.
+        The game ID of the unimported version to fetch preload information for.
       </Property>
       <Property name="version" type="string">
-        The version name of the unimported version.
+        The version name of the unimported version to fetch preload information for. The version name is the name of the folder or .zip file on disk.
       </Property>
     </Properties>
 
@@ -414,13 +414,13 @@ Versions, in Drop, require a lot of metadata to be imported correctly, due to th
 
     <Properties>
       <Property name="id" type="string">
-        The game ID of the unimported version.
+        The game ID of the unimported version, to import.
       </Property>
       <Property name="version" type="string">
-        The version name of the unimported version.
+        The version name of the unimported version, to import. See above comment (preload) about what it is.
       </Property>
       <Property name="platform" type="string">
-        The platform this version is for. Must be, currently, either "Windows", "Linux", or "macOS". You can mess up the capitalisation.
+        The platform this version is for. Must be, currently, either "Windows", "Linux", or "macOS". The value is technically capitalisation insensitive, but use proper capitalisation where possible.
       </Property>
       <Property name="delta" type="boolean">
         Whether or not this version is a 'delta' version. Read more about delta versions on the main docs: [Version deltas & ordering](https://docs.droposs.org/docs/library#version-deltas--ordering)
@@ -514,10 +514,10 @@ Versions, in Drop, require a lot of metadata to be imported correctly, due to th
         The version name of the unimported version.
       </Property>
       <Property name="platform" type="string">
-        The platform this version is for. Must be, currently, either "Windows", "Linux", or "macOS". You can mess up the capitalisation.
+        The platform this version is for. Must be, currently, either "Windows", "Linux", or "macOS". Capitalisation is technically insensitive, but use proper capitalisation where possible.
       </Property>
       <Property name="delta" type="boolean">
-        Whether or not this version is a 'delta' version. Read more about delta versions on the main docs: [Version deltas & ordering](https://docs.droposs.org/docs/library#version-deltas--ordering)
+        Whether or not this version is a 'delta' version. See above note on how delta versions work.
       </Property>
       <Property name="onlySetup" type="boolean">
         Set as `true` for this example.
@@ -532,15 +532,15 @@ Versions, in Drop, require a lot of metadata to be imported correctly, due to th
         A command to set up the game. Users will be able to run it multiple times, the installer should repair the installation.
       </Property>
       <Property name="setupArgs" type="string">
-        Optional, additional arguments to pass to the setup executable.
+        Optional, additional arguments to pass to the setup executable. Likely more important for setup-only versions.
       </Property>
       <Property name="umuId" type="string">
-        Optional, override the UMU ID for this game. Read more on the [UMU database](https://github.com/Open-Wine-Components/umu-database).
+        Optional, override the UMU ID for this game. See above for documentation on UMU IDs.
       </Property>
     </Properties>
 
     ### Response
-    For the response and how to use task IDs, see [Tasks](/web/tasks). You need the `import:version:read` ACL to connect.
+    See above on the returned task ID and required ACL.
 
   </Col>
   <Col sticky>
