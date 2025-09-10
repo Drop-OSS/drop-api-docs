@@ -1,0 +1,54 @@
+export const metadata = {
+  title: 'Contributing',
+  description:
+    'A getting started guide for those wanting to get into Drop development.',
+}
+
+# Contributing
+
+As an open-source project, we welcome and encourage contributions.
+
+We use the GitHub model of contributions. Briefly, you fork the project, commit to your private copy, and open a PR to have your changes merged back into the project. You can read more about this process here: [GitHub - Using Pull Requests](https://help.github.com/articles/using-pull-requests).
+
+## Policy
+
+### Generative AI
+
+We have a **no-AI contributions policy**. This is because, generally speaking, LLMs generate code that, while may work, is poorly organised and difficult to maintain.
+
+If you're curious, you can read Asahi Linux's reasons for denying AI contributions: [Asahi Linux - Generative AI](https://asahilinux.org/docs/project/policies/slop/). While not all reasons apply to Drop, it outlines why AI does not replace actual developers in its current form.
+
+## Internals
+
+The rest of this guide is intended to introduce developers to some of the internal structures and patterns we use inside of the Drop server. This guide assumes you've set up the development environment properly, and everything is working.
+
+<Note>
+  This guide may be out-of-date, and was last updated on 8th September 2025.
+</Note>
+
+## Database
+
+We use the [Prisma ORM](https://www.prisma.io/) as the main mechanism by which we access database tables. It's accessed by the global `prisma` object that you can import on any server route, and it provides each table as a typed API to CRUD rows on that table.
+
+For example, to fetch all users on the instance, use:
+
+```typescript
+import prisma from '~/server/internal/db/database'
+// ...
+const users = await prisma.user.findMany({})
+```
+
+## Objects
+
+We use a provider-based system for objects, that provide a series of utility functions depending on how you need to manipulate them. Although we currently only support file-system objects, keep in mind that we intend to seamlessly support S3 and other network file protocols.
+
+Objects can be managed using the globally-importable object `objectHandler`. Note that functions that check permissions are separate from those who don't, so ensure that you are using the right one for security reasons.
+
+## `internal` vs `api`
+
+We like to keep `api` routes to a minimum - all heavy logic should be done in a module in `internal`.
+
+We use a... loose naming convention internally for modules.
+
+- `...Handler` is an abstraction over providers that provide the data
+- `...Manager` manages the data itself.
