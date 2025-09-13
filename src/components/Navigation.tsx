@@ -262,6 +262,7 @@ export const navigation: Array<NavGroup> = [
       { title: 'Web API', href: '/guides/web' },
       { title: 'Client API', href: '/guides/client' },
       { title: 'Plugins', href: '/guides/plugins' },
+      { title: 'Contributing', href: '/contributing' },
     ],
   },
   {
