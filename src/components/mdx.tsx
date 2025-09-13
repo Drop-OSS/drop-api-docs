@@ -127,5 +127,5 @@ export function Property({
   )
 }
 
-import PG from './PayloadGenerator';
-export const PayloadGenerator = PG;
+import PG from './PayloadGenerator'
+export const PayloadGenerator = PG

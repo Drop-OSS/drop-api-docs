@@ -27,9 +27,7 @@ export default {
           '--tw-prose-invert-headings': theme('colors.white'),
           '--tw-prose-invert-links': theme('colors.blue.400'),
           '--tw-prose-invert-links-hover': theme('colors.blue.500'),
-          '--tw-prose-invert-links-underline': theme(
-            'colors.blue.500 / 0.3',
-          ),
+          '--tw-prose-invert-links-underline': theme('colors.blue.500 / 0.3'),
           '--tw-prose-invert-bold': theme('colors.white'),
           '--tw-prose-invert-counters': theme('colors.zinc.400'),
           '--tw-prose-invert-bullets': theme('colors.zinc.600'),
@@ -193,6 +191,14 @@ export default {
             ...theme('fontSize.base')[1],
             fontWeight: '600',
             marginTop: theme('spacing.10'),
+            marginBottom: theme('spacing.2'),
+          },
+          h4: {
+            color: 'var(--tw-prose-headings)',
+            fontSize: theme('fontSize.sm')[0],
+            ...theme('fontSize.base')[1],
+            fontWeight: '500',
+            marginTop: theme('spacing.4'),
             marginBottom: theme('spacing.2'),
           },
 

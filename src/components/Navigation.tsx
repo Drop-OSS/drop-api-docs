@@ -271,6 +271,7 @@ export const navigation: Array<NavGroup> = [
       { title: 'Objects', href: '/web/objects' },
       { title: 'Tasks', href: '/web/tasks' },
       { title: 'Import', href: '/web/import' },
+      { title: 'Library', href: '/web/library' },
     ],
   },
 ]

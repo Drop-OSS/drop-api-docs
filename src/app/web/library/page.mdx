@@ -1,0 +1,185 @@
+export const metadata = {
+  title: 'Library',
+  description:
+    "On this page, we'll dive into how to manage the instance's library and sources.",
+}
+
+# Library
+
+Drop supports having more than one library 'source' enabled at a time. This allows users to use multiple folders on their server, and merge all the separate libraries into one.
+
+Each library source has a specific type, which defines how it connects to games:
+
+- Drop-style (internally `Filesystem`). The default and recommended type, it supports the versioned folders that Drop was built for.
+- Compatibility (internally `FlatFilesystem`). Implemented for compatibility with GameVault and similar libraries, doesn't use versioned folders.
+
+You can read more about the user's side of things on the docs: [Library Sources](https://docs.droposs.org/docs/library).
+
+<Note>
+  We plan to add network-based library sources in the future, so keep this in
+  mind when using the endpoints. They may take longer to return values in the
+  future.
+</Note>
+
+---
+
+## The game model
+
+The game model stores most of the metadata attached to the game, and is used to render store pages and display in clients.
+
+### Properties
+
+<Properties>
+  #### Internal IDs and metadata
+  <Property name="id" type="string">
+    UUID of the game. Used internally to refer to this game.
+  </Property>
+  <Property name="metadataSource" type="string">
+    ID of the metadata sourced originally used to import this game.
+  </Property>
+  <Property name="metadataId" type="string">
+    Internal metadata source's ID for the original import.
+  </Property>
+  <Property name="created" type="timestamp">
+    Timestamp of when this game was originally created.
+  </Property>
+  <Property name="libraryId" type="string">
+    ID of library source this game is linked to.
+  </Property>
+  <Property name="libraryPath" type="string">
+    Path within the library source this game is linked to.
+  </Property>
+
+#### Admin-provided metadata
+
+<Property name="mName" type="string">
+  The name of this game.
+</Property>
+<Property name="mShortDescription" type="string">
+  A short description of this game, without requiring formatting.
+</Property>
+<Property name="mDescription" type="markdown">
+  A markdown representation of the long-form description of this game.
+</Property>
+<Property name="mReleased" type="timestamp">
+  When this game was released.
+</Property>
+
+<Property name="mIconObjectId" type="string">
+  Object ID of icon.
+</Property>
+<Property name="mBannerObjectId" type="string">
+  Object ID of background banner. Usually a wide, high-resolution image.
+</Property>
+<Property name="mCoverObjectId" type="string">
+  Object ID of cover. Usually a tall image with the title of the game.
+</Property>
+<Property name="mImageCarouselObjectIds" type="string[]">
+  Array of object IDs shown on the store's carousel.
+</Property>
+<Property name="mImageLibraryObjectIds" type="string[]">
+  An array of all object IDs linked to this game.
+</Property>
+
+#### Metadata flags
+
+  <Property name="featured" type="boolean">
+    Whether or not this game is featured for the carousel.
+  </Property>
+</Properties>
+
+---
+
+## Fetch library {{ tag: 'GET', label: '/api/v1/admin/library', apilevel: "system", acl: "library:read" }}
+
+<Row>
+  <Col>
+
+    This endpoint fetches all unimported and imported games.
+
+    ### Response values
+    <Properties>
+
+  <Property name="unimportedGames" type="object">
+    An object of library ID to paths that are yet to be imported.
+  </Property>
+  <Property name="games" type="array">
+    An array of game objects with attached status.
+
+    <Properties>
+
+  <Property name="game" type="object">
+    A metadata game object. Refer to [the game model](#the-game-model).
+  </Property>
+  <Property name="status" type="string | object">
+    A field indicating the status of this game.
+
+    If it is a string, it'll be "offline", which means that the library source this game is connected to isn't working right now.
+
+    If it's an object, it'll look like:
+
+    ```json
+    {
+      "noVersions": false,
+      "unimportedVersions": []
+    }
+    ```
+
+  </Property>
+</Properties>
+  </Property>
+</Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/api/v1/admin/library">
+
+    ```bash {{ title: 'cURL' }}
+    curl -G http://localhost:3000/api/v1/admin/library \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```js
+    const response = await fetch("http://localhost:3000/api/v1/admin/library", {
+        headers: {
+            Authorization: "Bearer {token}"
+        },
+    });
+
+    const results = await response.json();
+
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "unimportedGames": {
+            "myLibraryId": [ // These are paths on disk
+                "My Game",
+                "My Other Game",
+                "Horizon Zero Dawn"
+            ],
+            "myOtherLibraryId": []
+        },
+        "games": [
+            {
+                "game": { ... },
+                "status": {
+                    "noVersions": false,
+                    "unimportedVersions": []
+                }
+            },
+            {
+                "game": { ... },
+                "status": "offline"
+            }
+        ]
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
