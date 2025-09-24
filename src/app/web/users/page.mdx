@@ -305,7 +305,7 @@ Simple authentication is the default and fallback in Drop. It relies on a simple
 
 ---
 
-## Fetch invitations {{ tag: 'GET', label: '/api/v1/admin/invitation', apilevel: "system", acl: "auth:simple:invitation:read" }}
+## Fetch invitations {{ tag: 'GET', label: '/api/v1/admin/auth/invitation', apilevel: "system", acl: "auth:simple:invitation:read" }}
 
 <Row>
   <Col>
@@ -337,15 +337,15 @@ Simple authentication is the default and fallback in Drop. It relies on a simple
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="GET" label="/api/v1/admin/invitation">
+    <CodeGroup title="Request" tag="GET" label="/api/v1/admin/auth/invitation">
 
     ```bash {{ title: 'cURL' }}
-    curl -G http://localhost:3000/api/v1/admin/invitation \
+    curl -G http://localhost:3000/api/v1/admin/auth/invitation \
       -H "Authorization: Bearer {token}"
     ```
 
     ```js
-    const response = await fetch("http://localhost:3000/api/v1/admin/invitation", {
+    const response = await fetch("http://localhost:3000/api/v1/admin/auth/invitation", {
         headers: {
             Authorization: "Bearer {token}"
         }
@@ -375,7 +375,7 @@ Simple authentication is the default and fallback in Drop. It relies on a simple
 
 ---
 
-## Create invitation {{ tag: 'POST', label: '/api/v1/admin/invitation', apilevel: "system", acl: "auth:simple:invitation:new" }}
+## Create invitation {{ tag: 'POST', label: '/api/v1/admin/auth/invitation', apilevel: "system", acl: "auth:simple:invitation:new" }}
 
 <Row>
   <Col>
@@ -405,17 +405,17 @@ Simple authentication is the default and fallback in Drop. It relies on a simple
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="POST" label="/api/v1/admin/invitation">
+    <CodeGroup title="Request" tag="POST" label="/api/v1/admin/auth/invitation">
 
     ```bash {{ title: 'cURL' }}
-    curl -X POST http://localhost:3000/api/v1/admin/invitation \
+    curl -X POST http://localhost:3000/api/v1/admin/auth/invitation \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
       -d "{ ... }"
     ```
 
     ```js
-    const response = await fetch("http://localhost:3000/api/v1/admin/invitation", {
+    const response = await fetch("http://localhost:3000/api/v1/admin/auth/invitation", {
         headers: {
             Authorization: "Bearer {token}"
         },
@@ -450,7 +450,7 @@ Simple authentication is the default and fallback in Drop. It relies on a simple
 
 ---
 
-## Delete an invitation {{ tag: 'DELETE', label: '/api/v1/admin/invitation', apilevel: "system", acl: "auth:simple:invitation:delete" }}
+## Delete an invitation {{ tag: 'DELETE', label: '/api/v1/admin/auth/invitation', apilevel: "system", acl: "auth:simple:invitation:delete" }}
 
 <Row>
   <Col>
@@ -467,17 +467,17 @@ Simple authentication is the default and fallback in Drop. It relies on a simple
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="DELETE" label="/api/v1/admin/invitation">
+    <CodeGroup title="Request" tag="DELETE" label="/api/v1/admin/auth/invitation">
 
     ```bash {{ title: 'cURL' }}
-    curl -X DELETE http://localhost:3000/api/v1/admin/invitation \
+    curl -X DELETE http://localhost:3000/api/v1/admin/auth/invitation \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
       -d "{ ... }"
     ```
 
     ```js
-    const response = await fetch("http://localhost:3000/api/v1/admin/invitation", {
+    const response = await fetch("http://localhost:3000/api/v1/admin/auth/invitation", {
         headers: {
             Authorization: "Bearer {token}"
         },
