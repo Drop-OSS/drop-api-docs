@@ -66,7 +66,7 @@ function Eyebrow({
       )}
 
       {apilevel && acl && (
-        <span className="font-bold text-xs text-green-300 mb-0.5">
+        <span className="font-bold text-xs text-green-500 dark:text-green-300 mb-0.5">
           ACL: <span className="ml-1 font-mono text-zinc-900 dark:text-zinc-100">{acl}</span>
         </span>
       )}

@@ -1,5 +1,5 @@
 {
-  "name": "tailwind-plus-protocol",
+  "name": "drop-api-docs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -40,6 +40,7 @@
     "shiki": "^0.14.7",
     "simple-functional-loader": "^1.2.1",
     "tailwindcss": "^4.1.11",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
     "unist-util-filter": "^5.0.1",
     "unist-util-visit": "^5.0.0",

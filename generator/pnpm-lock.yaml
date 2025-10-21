@@ -1,0 +1,113 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      '@types/node':
+        specifier: ^24.9.1
+        version: 24.9.1
+      deno:
+        specifier: ^2.5.4
+        version: 2.5.4
+      prettier:
+        specifier: ^3.6.2
+        version: 3.6.2
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+packages:
+
+  '@deno/darwin-arm64@2.5.4':
+    resolution: {integrity: sha512-FWybfOwt0d3v4m9EMZd+0cEMTSHjZfoOomT9drK/mwa8uoZQ6PpQzjhlg9lIX2DCP92vZ+Miy4c1c6r0orSzjQ==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@deno/darwin-x64@2.5.4':
+    resolution: {integrity: sha512-uiP24gbIMzLya8DjP+lg3z/Ysnm0rmWVPOT36+nHS5UsO08+eArkAcKMxj7IfVPw1fzl8M8tpHt6d18amdnMJw==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@deno/linux-arm64-glibc@2.5.4':
+    resolution: {integrity: sha512-szui2JOiwozBkYRMN+xQGNyrVEel3kpGRKoy9k+kOMWtsu7F/36mLn1dr3hRNV0NmkRtwIyee1DosDVhd0lPlg==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@deno/linux-x64-glibc@2.5.4':
+    resolution: {integrity: sha512-HEsUi9vUtrG19uSoILLs+D3/x4U3DUaCYSbsN4frvilbT3A/y3XO6t1OR8LikZ4K4mN6Ur6mS6NOdZbzV4PR/Q==}
+    cpu: [x64]
+    os: [linux]
+
+  '@deno/win32-arm64@2.5.4':
+    resolution: {integrity: sha512-WjAXS8kfRrmeR4pJ4pZMfqgP/74canKOS6iJv4DMYSPQiv9DBEcNWj7trbsRuYUZQephNC+7KrACrk0kpriNwg==}
+    cpu: [arm64]
+    os: [win32]
+
+  '@deno/win32-x64@2.5.4':
+    resolution: {integrity: sha512-OYgHzdfrNX3iDdPCq5CkulPZ7tVj+bTzA7MX9SGkUgaIxLn16xG3RUK4L2MMRwaxBARcb5TT4eySC43tB9gE4Q==}
+    cpu: [x64]
+    os: [win32]
+
+  '@types/node@24.9.1':
+    resolution: {integrity: sha512-QoiaXANRkSXK6p0Duvt56W208du4P9Uye9hWLWgGMDTEoKPhuenzNcC4vGUmrNkiOKTlIrBoyNQYNpSwfEZXSg==}
+
+  deno@2.5.4:
+    resolution: {integrity: sha512-2TEB4HtIuSnzN6WBvIDXFgcVCyOZdDA5iiEL3iwIzC+tskOTcabxuVkVQCwWscFSYzYiI79kLZDMFXsSzB6j1Q==}
+    hasBin: true
+
+  prettier@3.6.2:
+    resolution: {integrity: sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ==}
+    engines: {node: '>=14'}
+    hasBin: true
+
+  typescript@5.9.3:
+    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
+  undici-types@7.16.0:
+    resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
+
+snapshots:
+
+  '@deno/darwin-arm64@2.5.4':
+    optional: true
+
+  '@deno/darwin-x64@2.5.4':
+    optional: true
+
+  '@deno/linux-arm64-glibc@2.5.4':
+    optional: true
+
+  '@deno/linux-x64-glibc@2.5.4':
+    optional: true
+
+  '@deno/win32-arm64@2.5.4':
+    optional: true
+
+  '@deno/win32-x64@2.5.4':
+    optional: true
+
+  '@types/node@24.9.1':
+    dependencies:
+      undici-types: 7.16.0
+
+  deno@2.5.4:
+    optionalDependencies:
+      '@deno/darwin-arm64': 2.5.4
+      '@deno/darwin-x64': 2.5.4
+      '@deno/linux-arm64-glibc': 2.5.4
+      '@deno/linux-x64-glibc': 2.5.4
+      '@deno/win32-arm64': 2.5.4
+      '@deno/win32-x64': 2.5.4
+
+  prettier@3.6.2: {}
+
+  typescript@5.9.3: {}
+
+  undici-types@7.16.0: {}
