@@ -273,6 +273,7 @@ export const navigation: Array<NavGroup> = [
       { title: 'Tasks', href: '/web/tasks' },
       { title: 'Import', href: '/web/import' },
       { title: 'Library', href: '/web/library' },
+      { title: 'Depot API', href: '/web/depot' },
     ],
   },
 ]
