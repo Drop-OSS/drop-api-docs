@@ -18,15 +18,12 @@ Some implementation decisions around depots may seem strange, but depots are des
 
 ## Setting up a depot
 
-On first setup, depots provide the admins with a static symmetric encryption key. This is used to **decrypt responses from depots**. This static encryption key, called the **admin depot key**, is stored privately on the server, and isn't shared with anyone.
+The Drop instance generates an encryption key, used to encrypt content files. This key, called the **depot key**, is shared with clients so they can decrypt their downloads. This is similar to how Steam's download system operates.
 
-The Drop instance then generates a second encryption key, used to encrypt content files. This key, called the **depot key**, is shared with clients so they can decrypt their downloads. This is similar to how Steam's download system operates.
-
-Because the admin depot key can't be shared, all non-content requests are proxied through the Drop server. The only exception is the speedtest endpoint.
 
 ---
 
-## Fetch depot manifest {{ tag: 'GET', label: '/manifest' }}
+## Fetch depot manifest {{ tag: 'GET', label: '/manifest.json' }}
 
 <Row>
   <Col>
@@ -39,10 +36,18 @@ Because the admin depot key can't be shared, all non-content requests are proxie
     ```json {{ title: 'Response' }}
     {
         "content": {
-            "gameid": ["version", "version2"],
-            "gameid2": ["version3", "version4"]
-        },
-        "encryption": "none" // Can be none, gzip, or zstd
+            "encrypted_game_id": [
+              {
+                "version_name": "encrypted_version_name",
+                "compression": "none" // Can be none, gzip or ztsd
+              },
+              {
+                "version_name": "encrypted_version_name_2",
+                "compression": "none" // Can be none, gzip or ztsd
+              }
+            ],
+            ...
+        }
     }
     ```
 
