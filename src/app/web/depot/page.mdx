@@ -18,7 +18,39 @@ Some implementation decisions around depots may seem strange, but depots are des
 
 ## Setting up a depot
 
-The Drop instance generates an encryption key, used to encrypt content files. This key, called the **depot key**, is shared with clients so they can decrypt their downloads. This is similar to how Steam's download system operates.
+Depots are created on the Drop server and given a key, so they can look up basic information about games and versions. However, depots, by themselves, cannot pull data from the Drop server, and therefore all content must be "pushed" to them.
+
+---
+## Manifest (v2)
+
+The version 2 manifest stores the following information:
+```json
+{
+  "version": "2",
+  "size": 0, // The size of the version in bytes, used for displaying in the web UI
+  "key": [0, 0, 0, 0, 0 ...], // 256 bit key for AES 128 CFR
+  "chunks": {
+    "chunkId": {
+      "iv": [0, 0, 0, 0, 0 ...], // 256 bit iv for AES 128 CFR
+      "checksum": "a1a1a1a1a1a1a1...", // sha256 checksum
+      "files": [
+        {
+          "filename": "MyGame.exe", // Relative filename to install root
+          "start": 0, // Byte index in the file
+          "length": 10, // Byte length in the file
+          "permissions": 0, // Linux file permissions. Base 10 format, usually described in basic 8 (e.g. 744)
+        }
+      ]
+    }
+  }
+}
+```
+
+As briefly mentioned above, each chunk is encrypted using a key, an IV, and AES 128 CTR. Optionally, each chunk can be compressed **before being encrypted**, using one of the below defined algorithms:
+
+- `gzip`: G-zip compression. Legacy, or for poorly-supported clients.
+- `zstd`: Z-standard compression
+- `brotli`: Brolti compression
 
 
 ---
@@ -36,13 +68,13 @@ The Drop instance generates an encryption key, used to encrypt content files. Th
     ```json {{ title: 'Response' }}
     {
         "content": {
-            "encrypted_game_id": [
+            "gameid": [
               {
-                "version_name": "encrypted_version_name",
+                "versionId": "version_id",
                 "compression": "none" // Can be none, gzip or ztsd
               },
               {
-                "version_name": "encrypted_version_name_2",
+                "versionId": "version_id_2",
                 "compression": "none" // Can be none, gzip or ztsd
               }
             ],
