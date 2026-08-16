@@ -81,7 +81,7 @@ export const Header = forwardRef<
       <div className="flex items-center gap-5">
         <nav className="hidden md:block">
           <ul role="list" className="flex items-center gap-8">
-            <TopLevelNavItem href="https://docs.droposs.org/">Documentation</TopLevelNavItem>
+            <TopLevelNavItem href="https://droposs.org/docs/">Documentation</TopLevelNavItem>
             <TopLevelNavItem href="https://github.com/Drop-OSS/">GitHub</TopLevelNavItem>
             <TopLevelNavItem href="https://discord.gg/ACq4qZp4a9">Discord</TopLevelNavItem>
           </ul>
